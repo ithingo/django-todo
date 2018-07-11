@@ -9,18 +9,18 @@ $(function() {
     formInput.focus();
 
     function addTodo() {
-        const text = formInput.val().trim();
-        if (text) {
-            const newObject = {
-                id: index,
-                text: text,
-                checked: false,
-            };
-            itemArray.push(newObject);
-            index += 1;
-            formInput.val("");
-            render("last");
-        }
+        // const text = formInput.val().trim();
+        // if (text) {
+        //     const newObject = {
+        //         id: index,
+        //         text: text,
+        //         checked: false,
+        //     };
+        //     itemArray.push(newObject);
+        //     index += 1;
+        //     formInput.val("");
+        //     render("last");
+        // }
     }
 
     function getFilteredArray() {
@@ -209,14 +209,34 @@ $(function() {
         render();
     }
 
+
+
+
+
+    // // AJAX for posting
+    // function createTask() {
+    //     console.log("create task is working");
+    //     console.log($('#form_input').val())
+    // }
+
+
+    // $("#my_form").submit(function(e) {
+    //     e.preventDefault();
+    //     console.log('form submitteed!!!');
+    //     createTask();
+    // });
+
+
+
+
     $("#add_button").click(function() {
-        addTodo();
+        // addTodo();
     });
 
     $("#form_input").keypress(function(e) {
-        if (e.which === enterKey) {
-            addTodo();
-        }
+        // if (e.which === enterKey) {
+        //     addTodo();
+        // }
     });
 
     $("#select_all").change(function(e) {

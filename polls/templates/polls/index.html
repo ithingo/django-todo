@@ -40,15 +40,17 @@
             </div>
         </div>
 
-        <div class="content__form form">
+        <form action="" method="post" class="content__form form">
+            {% csrf_token %} <!-- csrf token for basic security -->
+
             <div class="form__group input-group input-group-lg">
-                <input id="form_input" class="form-control" aria-label="Type to add" aria-describedby="inputGroup-sizing-default" type="text" >
+                <input id="form_input" name="input_text" class="form-control" aria-label="Type to add" aria-describedby="inputGroup-sizing-default" type="text" >
             </div>
 
             <dib class="btn-group">
-                <button id="add_button" class="form__button btn btn-primary btn-lg" >Add</button>
+                <button id="add_button" name="task_add" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
             </dib>
-        </div>
+        </form>
 
         <div class="content__tabs tabs" role="tablist">
             <a id="all" class="tabs__link active" data-toggle="list" href="#" role="tab">All</a>
