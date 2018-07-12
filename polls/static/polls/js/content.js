@@ -73,29 +73,29 @@ $(function() {
     }
 
     function repaintTags(array = itemArray) {
-        let htmlTags = "";
-
-        array.forEach(function(item) {
-            const { id: itemIndex, text: itemText, checked: itemChecked } = item;
-
-            const taskStatusClass = itemChecked ? "content__text_done" : "";
-            const checkedStatus = itemChecked ? "checked" : "";
-
-            const template = `<li id="${itemIndex}" class="${"tasks__item" + " "  + " mb-3"}">
-                                <div class="${"item__label" + " input-group-prepend"}">
-                                    <button type="button" class="${"item__delete" + " btn btn-danger"}">Delete</button>
-                                    <input type="checkbox" class="item__checkbox" ${checkedStatus}>
-                                </div>
-                                <div class="${"content__text" + " " + taskStatusClass}">
-                                    <div class="item__textwrapper">${itemText}</div>
-                                </div>
-                            </li>`;
-
-            htmlTags += template;
-        });
-        const taskList = $("#task_list");
-        taskList.html("");
-        taskList.append(htmlTags);
+        // let htmlTags = "";
+        //
+        // array.forEach(function(item) {
+        //     const { id: itemIndex, text: itemText, checked: itemChecked } = item;
+        //
+        //     const taskStatusClass = itemChecked ? "content__text_done" : "";
+        //     const checkedStatus = itemChecked ? "checked" : "";
+        //
+        //     const template = `<li id="${itemIndex}" class="${"tasks__item" + " "  + " mb-3"}">
+        //                         <div class="${"item__label" + " input-group-prepend"}">
+        //                             <button type="button" class="${"item__delete" + " btn btn-danger"}">Delete</button>
+        //                             <input type="checkbox" class="item__checkbox" ${checkedStatus}>
+        //                         </div>
+        //                         <div class="${"content__text" + " " + taskStatusClass}">
+        //                             <div class="item__textwrapper">${itemText}</div>
+        //                         </div>
+        //                     </li>`;
+        //
+        //     htmlTags += template;
+        // });
+        // const taskList = $("#task_list");
+        // taskList.html("");
+        // taskList.append(htmlTags);
     }
 
     function updateCounters() {

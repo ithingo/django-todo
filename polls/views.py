@@ -39,10 +39,10 @@ class MyBaseTemplateView(View):
             new_task_item.save()
             form = self.form_class()
 
-        # task_list = TodoItem.objects.all()
+        task_list = TodoItem.objects.all()
         template = self.template_name
         context = {
             'form': form,
-            # 'task_list': task_list,
+            'task_list': task_list,
         }
         return render(request, template, context);
