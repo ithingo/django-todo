@@ -8,34 +8,22 @@ $(function() {
     const formInput = $("#form_input");
     formInput.focus();
 
-    // function addTodo() {
-    //     const text = formInput.val().trim();
-    //     if (text) {
-    //         const newObject = {
-    //             id: index,
-    //             text: text,
-    //             checked: false,
-    //         };
-    //         itemArray.push(newObject);
-    //         index += 1;
-    //         formInput.val("");
-    //         render("last");
-    //     }
-    // }
-
     function addTodo() {
         const text = formInput.val().trim();
         if (text) {
 
             $.ajax({
-                url: "/ajax/add_item/", //????????????????????
+                type: 'POST',
+                url: "/", //????????????????????
                 data: {
                     'input_text': text,
                 },
                 dataType: 'json',
-                // {#success: function(data) {#}
-                // {#   #}
-                // {# } #}
+                // success: function(data){
+                //     if (data == 'ok'){
+                //         location.reload();
+                //     }
+                // }
             });
 
             formInput.val("");
