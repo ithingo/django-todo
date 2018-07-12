@@ -1,10 +1,14 @@
 from django import forms
 
 
-from .models import TodoItem
-
-
-class NewItemForm(forms.ModelForm):
-    class Meta:
-        model = TodoItem
-        fields = ('input_text',)
+class NewItemForm(forms.Form):
+    input_text = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Click Add or press Enter',
+                'class': 'form-control',
+                'aria-label': 'Type to add',
+                'aria-describedby': 'inputGroup-sizing-default',
+            }
+        )
+    )

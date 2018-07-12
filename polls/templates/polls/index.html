@@ -42,8 +42,14 @@
 
         <form action="{% url 'add_item' %}" method="post" class="content__form form">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" id="add_button"></button>
+
+            <div class="form__group input-group input-group-lg">
+                {{ form }}
+            </div>
+
+            <dib class="btn-group">
++                <button id="add_button" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
+             </dib>
         </form>
 
         <div class="content__tabs tabs" role="tablist">
