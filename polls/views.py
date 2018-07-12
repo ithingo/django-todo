@@ -2,16 +2,18 @@ import json
 
 from django.shortcuts import render
 from django.views.generic import View, ListView
+
+from rest_framework import generics
 from django.http import JsonResponse
 
 
-from .models import TodoItem
 from .forms import NewItemForm
+from .models import TodoItem
+from .serializers import TodoItemSerializer
 
 
 class MyBaseTemplateView(View):
     template_name = 'polls/index.html'
-
     form_class = NewItemForm
 
     def get(self, request):
@@ -23,16 +25,11 @@ class MyBaseTemplateView(View):
             'form': form,
             'task_list': task_list,
         }
-        return render(request, template, context);
+        return render(request, template, context)
 
     def post(self, request):
         form = self.form_class(request.POST)
-
-        print(request)
-
         input_text = request.POST.get('input_text', None)
-
-        print(input_text)
 
         if form.is_valid():
             new_task_item = TodoItem(input_text=input_text)
@@ -46,3 +43,8 @@ class MyBaseTemplateView(View):
             'task_list': task_list,
         }
         return render(request, template, context);
+
+
+class TaskList(generics.ListAPIView):
+    queryset = TodoItem.objects.all()
+    serializer_class = TodoItemSerializer
