@@ -8,19 +8,38 @@ $(function() {
     const formInput = $("#form_input");
     formInput.focus();
 
+    // function addTodo() {
+    //     const text = formInput.val().trim();
+    //     if (text) {
+    //         const newObject = {
+    //             id: index,
+    //             text: text,
+    //             checked: false,
+    //         };
+    //         itemArray.push(newObject);
+    //         index += 1;
+    //         formInput.val("");
+    //         render("last");
+    //     }
+    // }
+
     function addTodo() {
-        // const text = formInput.val().trim();
-        // if (text) {
-        //     const newObject = {
-        //         id: index,
-        //         text: text,
-        //         checked: false,
-        //     };
-        //     itemArray.push(newObject);
-        //     index += 1;
-        //     formInput.val("");
-        //     render("last");
-        // }
+        const text = formInput.val().trim();
+        if (text) {
+
+            $.ajax({
+                url: "/ajax/add_item/", //????????????????????
+                data: {
+                    'input_text': text,
+                },
+                dataType: 'json',
+                // {#success: function(data) {#}
+                // {#   #}
+                // {# } #}
+            });
+
+            formInput.val("");
+        }
     }
 
     function getFilteredArray() {
@@ -230,13 +249,13 @@ $(function() {
 
 
     $("#add_button").click(function() {
-        // addTodo();
+        addTodo();
     });
 
     $("#form_input").keypress(function(e) {
-        // if (e.which === enterKey) {
-        //     addTodo();
-        // }
+        if (e.which === enterKey) {
+            addTodo();
+        }
     });
 
     $("#select_all").change(function(e) {

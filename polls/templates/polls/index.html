@@ -17,19 +17,19 @@
 {#</body>#}
 {#</html>#}
 
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
-
     <meta charset="UTF-8">
     <link href="{% static 'polls/css/styles.css' %}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <title>Todo JS with jQuery</title>
+    <title>Todo with Python and Django</title>
 </head>
 <body>
     <div class="content">
-        <div class="content__title">Todo with JS & jQuery</div>
+        <div class="content__title">Todo with Django REST</div>
 
         <div class="content__panel mb-3"  role="toolbar" aria-label="Toolbar with button groups">
             <button id="delete_all_button" class="panel__button panel__button_deleteall btn btn-secondary btn-lg">Delete completed</button>
@@ -40,17 +40,20 @@
             </div>
         </div>
 
-        <form action="" method="post" class="content__form form">
-            {% csrf_token %} <!-- csrf token for basic security -->
+{#        <form action="" method="post" class="content__form form">#}
+{#            {% csrf_token %} <!-- csrf token for basic security -->#}
+{##}
+{#            <div class="form__group input-group input-group-lg">#}
+{#                <input id="form_input" name="input_text" class="form-control" aria-label="Type to add" aria-describedby="inputGroup-sizing-default" type="text" >#}
+{#            </div>#}
+{##}
+{#            <dib class="btn-group">#}
+{#                <button id="add_button" name="task_add" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>#}
+{#            </dib>#}
+{#        </form>#}
 
-            <div class="form__group input-group input-group-lg">
-                <input id="form_input" name="input_text" class="form-control" aria-label="Type to add" aria-describedby="inputGroup-sizing-default" type="text" >
-            </div>
-
-            <dib class="btn-group">
-                <button id="add_button" name="task_add" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
-            </dib>
-        </form>
+        {% block content_form %}
+        {% endblock %}
 
         <div class="content__tabs tabs" role="tablist">
             <a id="all" class="tabs__link active" data-toggle="list" href="#" role="tab">All</a>
@@ -85,5 +88,9 @@
 
 <script src="{% static 'polls/libs/jquery.min.js' %}"></script>
 <script src="{% static 'polls/libs/lodash.js' %}"></script>
+
+{% block javascript %}
+{% endblock %}
+
 <script src="{% static 'polls/js/content.js' %}"></script>
 </html>

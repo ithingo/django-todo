@@ -1,0 +1,48 @@
+{#{% extends 'polls/index.html' %}#}
+{##}
+{#{% block content_form %}#}
+{#    <form action="" method="post" class="content__form form">#}
+{#        {% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#        <button type="submit" id="add_button"></button>#}
+{#    </form>#}
+{#{% endblock %}#}
+{##}
+{#{% block javascript %}#}
+{#    <script>#}
+{#        $(function() {#}
+{#            const formInput = $("#form_input");#}
+{#            const addButton = $("#add_button");#}
+{#            formInput.focus();#}
+{##}
+{#            addButton.click(function() {#}
+{#                addTodo();#}
+{#            });#}
+{##}
+{#            formInput.keypress(function(e) {#}
+{#                if (e.which === enterKey) {#}
+{#                    addTodo();#}
+{#                }#}
+{#            });#}
+{##}
+{#            function addTodo() {#}
+{#                const text = formInput.val().trim();#}
+{#                if (text) {#}
+{##}
+{#                    $.ajax({#}
+{#                        url: "/ajax/add_item/", //????????????????????#}
+{#                        data: {#}
+{#                            'input_text': text,#}
+{#                        },#}
+{#                        dataType: 'json',#}
+                        {#success: function(data) {#}
+                        {#   #}
+                        {# } #}
+{#                    });#}
+{##}
+{#                    formInput.val("");#}
+{#                }#}
+{#            }#}
+{#        });#}
+{#    </script>#}
+{#{% endblock %}#}
