@@ -1,15 +1,9 @@
-import json
-
 from django.shortcuts import render
-from django.views.generic import View, ListView
-
-from rest_framework import generics
-from django.http import JsonResponse
+from django.views.generic import View
 
 
 from .forms import NewItemForm
 from .models import TodoItem
-from .serializers import TodoItemSerializer
 
 
 class MyBaseTemplateView(View):
@@ -44,7 +38,3 @@ class MyBaseTemplateView(View):
         }
         return render(request, template, context);
 
-
-class TaskList(generics.ListAPIView):
-    queryset = TodoItem.objects.all()
-    serializer_class = TodoItemSerializer
