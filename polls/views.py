@@ -37,6 +37,7 @@ class MyBaseTemplateView(View):
         if form.is_valid():
             new_task_item = TodoItem(input_text=input_text)
             new_task_item.save()
+            form = self.form_class()
 
         # task_list = TodoItem.objects.all()
         template = self.template_name
