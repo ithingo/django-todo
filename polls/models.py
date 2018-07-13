@@ -2,18 +2,18 @@ from django.db import models
 from django.utils import timezone as date
 
 
-class TodoItem(models.Model):
+class Task(models.Model):
     input_text = models.TextField(blank=True)
     checked = models.BooleanField(default=False)
     created_at = models.DateField(default=date.now().strftime('%Y-%m-%d'))
     updated_at = models.DateField(default=date.now().strftime('%Y-%m-%d'))
 
     class Meta:
-        verbose_name = 'TodoItem'
+        verbose_name = 'Task'
         verbose_name_plural = 'TodoItems'
 
-        # Ordering by DESC with leading "-"
-        ordering = ["-created_at"]
+        # Ordering by ASC; DESC is with leading "-"
+        ordering = ["created_at"]
 
         db_table = 'django_todo_items'
 

@@ -4,7 +4,7 @@ from rest_framework import serializers
 from polls import models
 
 
-class TodoItemSerializer(serializers.ModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = (
@@ -14,4 +14,4 @@ class TodoItemSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         )
-        model = models.TodoItem
+        model = models.Task

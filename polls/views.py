@@ -3,7 +3,7 @@ from django.views.generic import View
 
 
 from .forms import NewItemForm
-from .models import TodoItem
+from .models import Task
 
 
 class MyBaseTemplateView(View):
@@ -13,7 +13,7 @@ class MyBaseTemplateView(View):
     def get(self, request):
         form = self.form_class()
 
-        task_list = TodoItem.objects.all()
+        task_list = Task.objects.all()
         template = self.template_name
         context = {
             'form': form,
@@ -26,11 +26,11 @@ class MyBaseTemplateView(View):
         input_text = request.POST.get('input_text', None)
 
         if form.is_valid():
-            new_task_item = TodoItem(input_text=input_text)
+            new_task_item = Task(input_text=input_text)
             new_task_item.save()
             form = self.form_class()
 
-        task_list = TodoItem.objects.all()
+        task_list = Task.objects.all()
         template = self.template_name
         context = {
             'form': form,

@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='TodoItem',
+            name='Task',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('checked', models.BooleanField(default=False)),
@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateField(default='2018-07-10')),
             ],
             options={
-                'verbose_name': 'TodoItem',
+                'verbose_name': 'Task',
                 'verbose_name_plural': 'TodoItems',
                 'db_table': 'django_todo_items',
                 'ordering': ['-created_at'],
