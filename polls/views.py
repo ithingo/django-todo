@@ -1,48 +1,49 @@
-import json
-
 from django.shortcuts import render
-from django.views.generic import View, ListView
-from django.http import JsonResponse
-
+from django.views.generic import View
 
 from .models import TodoItem
-from .forms import NewItemForm
+from . import forms
 
 
 class MyBaseTemplateView(View):
     template_name = 'polls/index.html'
-
-    form_class = NewItemForm
+    success_url = '/'
 
     def get(self, request):
-        form = self.form_class()
+        tab_switch_form = forms.TabSwitchForm(prefix='tabs')
+        new_item_form = forms.NewItemForm(prefix='newi')
+
+
 
         task_list = TodoItem.objects.all()
         template = self.template_name
         context = {
-            'form': form,
+            'tab_switch_form': tab_switch_form,
+            'new_item_form': new_item_form,
             'task_list': task_list,
         }
-        return render(request, template, context);
+        return render(request, template, context)
 
     def post(self, request):
-        form = self.form_class(request.POST)
-
-        print(request)
+        tab_switch_form = forms.TabSwitchForm(request.POST, prefix='tabs')
+        new_item_form = forms.NewItemForm(request.POST, prefix='newi')
 
         input_text = request.POST.get('input_text', None)
 
-        print(input_text)
+        if new_item_form.is_valid() and tab_switch_form.is_valid():
 
-        if form.is_valid():
+            # print(request.POST)
+
             new_task_item = TodoItem(input_text=input_text)
             new_task_item.save()
-            form = self.form_class()
+            new_item_form = forms.NewItemForm()
 
         task_list = TodoItem.objects.all()
         template = self.template_name
         context = {
-            'form': form,
+            'tab_switch_form': tab_switch_form,
+            'new_item_form': new_item_form,
             'task_list': task_list,
         }
-        return render(request, template, context);
+        return render(request, template, context)
+

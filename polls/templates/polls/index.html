@@ -10,27 +10,35 @@
 </head>
 <body>
     <div class="content">
-        <div class="content__title">Todo with Django REST</div>
+        <div class="content__title">Todo with Django</div>
 
-        <div class="content__panel mb-3"  role="toolbar" aria-label="Toolbar with button groups">
-            <button id="delete_all_button" class="panel__button panel__button_deleteall btn btn-secondary btn-lg">Delete completed</button>
+        <form action="{% url 'actions_panel' %}" method="post">
+            {% csrf_token %}
 
-            <div class="content__selectall">
-                <input id="select_all" type="checkbox" value="">
-                <div>Select or deselect all</div>
+{#          CREATE DYNAMICALLY FORM WITH THESE ATTRIBUTES                #}
+
+            <div class="content__panel mb-3"  role="toolbar" aria-label="Toolbar with button groups">
+                <button id="delete_all_button" class="panel__button panel__button_deleteall btn btn-secondary btn-lg">Delete completed</button>
+
+                <div class="content__selectall">
+                    <button id="select_all" type="submit" class="CURRENTLY_VISIBLE">Select all</button>
+                    <button id="deselect_all" type="submit" class="CURRENTLY_HIDDEN">Deselect all</button>
+                </div>
             </div>
-        </div>
+        </form>
 
         <form action="{% url 'add_item' %}" method="post" class="content__form form">
             {% csrf_token %}
 
-            <div class="form__group input-group input-group-lg">
-                {{ form }}
-            </div>
+            <div class="new-items-wrapper">
+                <div class="form__group input-group input-group-lg">
+                    {{ new_item_form }}
+                </div>
 
-            <dib class="btn-group">
-+                <button id="add_button" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
-             </dib>
+                <dib class="btn-group">
+    +                <button id="add_button" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
+                 </dib>
+            </div>
         </form>
 
         <div class="content__tabs tabs" role="tablist">
@@ -39,6 +47,7 @@
             <a id="not-completed"  class="tabs__link" data-toggle="list" href="#" role="tab">Not completed</a>
         </div>
 
+{#    add form with method post, post for those that cause any change in db      #}
         <div class="content__group">
             <div class="content__tasks tasks">
                     {% if task_list %}
@@ -64,20 +73,29 @@
 
             <ul id="pagination_panel" class="content__pagination"></ul>
 
-            <ul id="panel_counter" class="panel__counter list-group counter">
-                <li>
-                    <div id="counter_label_all" class=" counter__label">All:</div>
-                    <div class="counter__value">0</div>
-                </li>
-                <li>
-                    <div id="counter_label_checked" class=" counter__label">Checked:</div>
-                    <div class="counter__value">0</div>
-                </li>
-                <li>
-                    <div id="counter_label_unchecked" class=" counter__label">Unchecked:</div>
-                    <div class="counter__value">0</div>
-                </li>
-            </ul>
+            <form action="" method="get">
+                {% csrf_token %}
+                <ul id="panel_counter" class="panel__counter list-group counter">
+                    {% for tab_form in tab_switch_forms %}
+                        <li>
+{#                            <div id="counter_label_all" class=" counter__label">All:</div>#}
+{#                            <div class="counter__value">0</div>#}
+                            <div id="{{ tab_form.id }}"></div>
+                            <div class="counter_label">{{ tab_form.count }}</div>
+                        </li>
+
+                    {% endfor %}
+{#                        <li>#}
+{#                            <div id="counter_label_checked" class=" counter__label">Checked:</div>#}
+{#                            <div class="counter__value">0</div>#}
+{#                        </li>#}
+{#                        <li>#}
+{#                            <div id="counter_label_unchecked" class=" counter__label">Unchecked:</div>#}
+{#                            <div class="counter__value">0</div>#}
+{#                        </li>#}
+                </ul>
+            </form>
+
         </div>
     </div>
 </body>

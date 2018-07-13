@@ -14,3 +14,21 @@ class NewItemForm(forms.Form):
             },
         ),
     )
+
+# class ActionPanelForm(forms.Form):
+
+
+
+
+# class TaskListForm(forms.Form):
+
+
+TABS_SWITCHERS = (
+    ('all', 'All'),
+    ('checked', 'Checked'),
+    ('unchecked', 'Unchecked'),
+)
+
+
+class TabSwitchForm(forms.Form):
+    tabs = forms.ChoiceField(choices=TABS_SWITCHERS,)
