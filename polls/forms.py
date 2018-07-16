@@ -10,14 +10,13 @@ class NewItemForm(forms.Form):
                 'class': 'form-control',
                 'aria-label': 'Type to add',
                 'aria-describedby': 'inputGroup-sizing-default',
-                'required': 'true'
+                'required': 'true',
+                'name': 'input_text',
             },
         ),
     )
 
 # class ActionPanelForm(forms.Form):
-
-
 
 
 # class TaskListForm(forms.Form):

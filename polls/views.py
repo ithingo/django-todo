@@ -10,10 +10,8 @@ class MyBaseTemplateView(View):
     success_url = '/'
 
     def get(self, request):
-        tab_switch_form = forms.TabSwitchForm(prefix='tabs')
-        new_item_form = forms.NewItemForm(prefix='newi')
-
-
+        tab_switch_form = forms.TabSwitchForm()
+        new_item_form = forms.NewItemForm()
 
         task_list = TodoItem.objects.all()
         template = self.template_name
@@ -25,15 +23,12 @@ class MyBaseTemplateView(View):
         return render(request, template, context)
 
     def post(self, request):
-        tab_switch_form = forms.TabSwitchForm(request.POST, prefix='tabs')
-        new_item_form = forms.NewItemForm(request.POST, prefix='newi')
+        tab_switch_form = forms.TabSwitchForm(request.POST)
+        new_item_form = forms.NewItemForm(request.POST)
 
         input_text = request.POST.get('input_text', None)
 
-        if new_item_form.is_valid() and tab_switch_form.is_valid():
-
-            # print(request.POST)
-
+        if new_item_form.is_valid():
             new_task_item = TodoItem(input_text=input_text)
             new_task_item.save()
             new_item_form = forms.NewItemForm()
