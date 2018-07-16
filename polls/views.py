@@ -7,29 +7,48 @@ from . import forms
 
 class MyBaseTemplateView(View):
     template_name = 'polls/index.html'
-    success_url = '/'
-
     new_item_form_class = forms.NewItemForm
     tab_switch_form = forms.TabSwitchForm
 
-    def get_all_objects(self):
+    def __get_all_objects(self):
+        """Gets all task items"""
         try:
             return TodoItem.objects.all()
         except TodoItem.DoesNotExist:
             return None                   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    def get_object(selfself, pk):
+    def __get_object(self, pk):
+        """Gets single task by primary key (id)"""
         try:
             task = TodoItem.objects.get(pk=pk)
             return task
         except TodoItem.DoesNotExist:
             return None                   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+    def __save_task(self, input_text):
+        """Creates new task item from input text"""
+        new_task_item = TodoItem(input_text=input_text)
+        new_task_item.save()
+
+    def __delete_task(self, pk):
+        """Deletes task from db by primary key (id)"""
+        task = self.__get_object(pk)
+        task.delete()
+
+    def __change_task_status(self, pk, checked):
+        """Changes task status - checked or unchecked"""
+        task = self.__get_object(pk)
+        task.checked = checked
+        task.save()
+
+    # HTML forms support only GET and POST methods
+
     def get(self, request):
+        """For method GET"""
         tab_switch_form = forms.TabSwitchForm()
         new_item_form = forms.NewItemForm()
 
-        task_list = self.get_all_objects()
+        task_list = self.__get_all_objects()
         template = self.template_name
         context = {
             'tab_switch_form': tab_switch_form,
@@ -39,30 +58,31 @@ class MyBaseTemplateView(View):
         return render(request, template, context)
 
     def post(self, request):
+        """For method POST"""
         tab_switch_form = forms.TabSwitchForm(request.POST)
         new_item_form = forms.NewItemForm(request.POST)
 
         if 'add_item' in request.POST:
             if new_item_form.is_valid():
                 input_text = new_item_form.cleaned_data['input_text']
-                self.save_task(input_text)
+                self.__save_task(input_text)
                 new_item_form = forms.NewItemForm()
 
         if 'delete_item' in request.POST:
             pk = request.POST.get('task_id')
-            self.delete_task(pk)
+            self.__delete_task(pk)
 
         if 'make_item_done' in request.POST:
             pk = request.POST.get('task_id')
             checked = True
-            self.change_task_status(pk, checked)
+            self.__change_task_status(pk, checked)
 
         if 'make_item_undone' in request.POST:
             pk = request.POST.get('task_id')
             checked = False
-            self.change_task_status(pk, checked)
+            self.__change_task_status(pk, checked)
 
-        task_list = self.get_all_objects()
+        task_list = self.__get_all_objects()
         template = self.template_name
         context = {
             'tab_switch_form': tab_switch_form,
@@ -71,18 +91,6 @@ class MyBaseTemplateView(View):
         }
         return render(request, template, context)
 
-    def save_task(self, input_text):
-        new_task_item = TodoItem(input_text=input_text)
-        new_task_item.save()
-
-    def delete_task(self, pk):
-        task = self.get_object(pk)
-        task.delete()
-
-    def change_task_status(self, pk, checked):
-        task = self.get_object(pk)
-        task.checked = checked
-        task.save()
 
 
 
