@@ -56,6 +56,7 @@ class MyBaseTemplateView(View):
         tasks.delete()
 
     def __get_paginated_list(self, request, task_list):
+        """Returns list of elements paginated with specific page"""
         items_on_page = 5
         paginator = Paginator(task_list, items_on_page)
 
@@ -72,10 +73,12 @@ class MyBaseTemplateView(View):
         return task_list_paginated
 
     def __clear_input(self, input_text):
+        """Removes html tags to save only inner tag value"""
         input_text = re.sub(r'</?[a-zA-Z]*>', '', input_text)
         return input_text
 
     def __get_counters(self):
+        """Returns dictionary with current counters for every element status type"""
         all_count = self.__get_all_objects().count()
         checked_count = self.__get_objects_by_checked(checked=True).count()
         unchecked_count = self.__get_objects_by_checked(checked=False).count()
@@ -170,7 +173,3 @@ class MyBaseTemplateView(View):
             'counters': counters,
         }
         return render(request, template, context)
-
-
-
-
