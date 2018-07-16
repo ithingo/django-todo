@@ -12,25 +12,15 @@ class MyBaseTemplateView(View):
 
     def __get_all_objects(self):
         """Gets all task items"""
-        try:
-            return TodoItem.objects.all()
-        except TodoItem.DoesNotExist:
-            return None                   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        return TodoItem.objects.all()
 
     def __get_checked_objects(self):
         """Gets all task items"""
-        try:
-            return TodoItem.objects.get(checked=True)
-        except TodoItem.DoesNotExist:
-            return None
+        return TodoItem.objects.filter(checked=True)
 
     def __get_object(self, pk):
         """Gets single task by primary key (id)"""
-        try:
-            task = TodoItem.objects.get(pk=pk)
-            return task
-        except TodoItem.DoesNotExist:
-            return None                   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        return TodoItem.objects.get(pk=pk)
 
     def __save_task(self, input_text):
         """Creates new task item from input text"""
