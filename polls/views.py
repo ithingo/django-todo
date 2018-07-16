@@ -45,14 +45,22 @@ class MyBaseTemplateView(View):
         if 'add_item' in request.POST:
             if new_item_form.is_valid():
                 input_text = new_item_form.cleaned_data['input_text']
-
-                new_task_item = TodoItem(input_text=input_text)
-                new_task_item.save()
+                self.save_task(input_text)
                 new_item_form = forms.NewItemForm()
 
         if 'delete_item' in request.POST:
             pk = request.POST.get('task_id')
             self.delete_task(pk)
+
+        if 'make_item_done' in request.POST:
+            pk = request.POST.get('task_id')
+            checked = True
+            self.change_task_status(pk, checked)
+
+        if 'make_item_undone' in request.POST:
+            pk = request.POST.get('task_id')
+            checked = False
+            self.change_task_status(pk, checked)
 
         task_list = self.get_all_objects()
         template = self.template_name
@@ -63,8 +71,18 @@ class MyBaseTemplateView(View):
         }
         return render(request, template, context)
 
+    def save_task(self, input_text):
+        new_task_item = TodoItem(input_text=input_text)
+        new_task_item.save()
+
     def delete_task(self, pk):
         task = self.get_object(pk)
         task.delete()
+
+    def change_task_status(self, pk, checked):
+        task = self.get_object(pk)
+        task.checked = checked
+        task.save()
+
 
 

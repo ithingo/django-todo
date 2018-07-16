@@ -55,15 +55,21 @@
                     {% for task in task_list %}
                         <li id="{{ task.id }}" class="tasks__item mb-3">
                             <div class="item__label input-group-prepend">
-
                                 <form action="{% url 'delete_item' %}" method="post">
                                     {% csrf_token %}
                                     <input type="hidden" name="task_id" value="{{task.id}}" />
                                     <button type="submit" name="delete_item" class="item__delete btn btn-danger">Delete</button>
                                 </form>
 
-
-                                <input type="checkbox" class="item__checkbox {% if task.checked %} checked {% endif %}" />
+                                <form action="{% url 'change_item' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="task_id" value="{{task.id}}" />
+                                    <button type="submit"
+                                            {% if task.checked %} name="make_item_undone" {% else %} name="make_item_done" {% endif %}
+                                            class="item__delete btn btn-danger">
+                                    {% if task.checked %} X {% else %} V {% endif %}
+                                    </button>
+                                </form>
                             </div>
 
                             <div class="content__text + {% if task.checked %} content__text_done {% endif %}">
