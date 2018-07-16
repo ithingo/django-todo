@@ -39,19 +39,23 @@ class MyBaseTemplateView(View):
         task.save()
 
     def __change_all_status(self, checked):
+        """Changes status - cvhecked or unchecked - for all tasks"""
         tasks = self.__get_all_objects()
         for task in tasks:
             task.checked = checked
             task.save()
 
     def __delete_all(self):
+        """Deletes all tasks"""
         tasks = self.__get_checked_objects()
         tasks.delete()
 
     # HTML forms support only GET and POST methods
 
     def get(self, request):
-        """For method GET"""
+        """For method GET
+        renders page at first step, if tabs clicked - do tab switching
+        (tab switching doesn't modify db, so it uses GET request)"""
         tab_switch_form = forms.TabSwitchForm()
         new_item_form = forms.NewItemForm()
 
@@ -75,7 +79,10 @@ class MyBaseTemplateView(View):
         return render(request, template, context)
 
     def post(self, request):
-        """For method POST"""
+        """For method POST
+        handles POST requests from all forms on a page (all targets to the root url)
+        does whatever it needs
+        and re-render page"""
         tab_switch_form = forms.TabSwitchForm(request.POST)
         new_item_form = forms.NewItemForm(request.POST)
 
