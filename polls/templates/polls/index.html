@@ -15,8 +15,6 @@
         <form action="{% url 'actions_panel' %}" method="post">
             {% csrf_token %}
 
-{#          CREATE DYNAMICALLY FORM WITH THESE ATTRIBUTES                #}
-
             <div class="content__panel mb-3"  role="toolbar" aria-label="Toolbar with button groups">
                 <button id="delete_all_button" class="panel__button panel__button_deleteall btn btn-secondary btn-lg">Delete completed</button>
 
@@ -35,9 +33,9 @@
                     {{ new_item_form }}
                 </div>
 
-                <dib class="btn-group">
+                <div class="btn-group">
     +                <button id="add_button" name="add_item" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
-                 </dib>
+                 </div>
             </div>
         </form>
 
@@ -47,12 +45,14 @@
             <a id="not-completed"  class="tabs__link" data-toggle="list" href="#" role="tab">Not completed</a>
         </div>
 
-{#    add form with method post, post for those that cause any change in db      #}
         <div class="content__group">
             <div class="content__tasks tasks">
                 {% if task_list %}
+
                     <ul id="task_list" class="tasks__list">
+
                     {% for task in task_list %}
+
                         <li id="{{ task.id }}" class="tasks__item mb-3">
                             <div class="item__label input-group-prepend">
                                 <form action="{% url 'delete_item' %}" method="post">
@@ -76,8 +76,11 @@
                                 <div class="item__textwrapper">{{ task.input_text }}</div>
                             </div>
                         </li>
+
                     {% endfor %}
+
                     </ul>
+
                 {% else %}
                     <p>No items are available.</p>
                 {% endif %}
@@ -112,11 +115,6 @@
     </div>
 </body>
 
-<script src="{% static 'polls/libs/jquery.min.js' %}"></script>
-<script src="{% static 'polls/libs/lodash.js' %}"></script>
-
 {% block javascript %}
 {% endblock %}
-
-<script src="{% static 'polls/js/content.js' %}"></script>
 </html>
