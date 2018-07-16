@@ -9,11 +9,27 @@ class MyBaseTemplateView(View):
     template_name = 'polls/index.html'
     success_url = '/'
 
+    new_item_form_class = forms.NewItemForm
+    tab_switch_form = forms.TabSwitchForm
+
+    def get_all_objects(self):
+        try:
+            return TodoItem.objects.all()
+        except TodoItem.DoesNotExist:
+            return None                   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    def get_object(selfself, pk):
+        try:
+            task = TodoItem.objects.get(pk=pk)
+            return task
+        except TodoItem.DoesNotExist:
+            return None                   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     def get(self, request):
         tab_switch_form = forms.TabSwitchForm()
         new_item_form = forms.NewItemForm()
 
-        task_list = TodoItem.objects.all()
+        task_list = self.get_all_objects()
         template = self.template_name
         context = {
             'tab_switch_form': tab_switch_form,
@@ -26,14 +42,19 @@ class MyBaseTemplateView(View):
         tab_switch_form = forms.TabSwitchForm(request.POST)
         new_item_form = forms.NewItemForm(request.POST)
 
-        input_text = request.POST.get('input_text', None)
+        if 'add_item' in request.POST:
+            if new_item_form.is_valid():
+                input_text = new_item_form.cleaned_data['input_text']
 
-        if new_item_form.is_valid():
-            new_task_item = TodoItem(input_text=input_text)
-            new_task_item.save()
-            new_item_form = forms.NewItemForm()
+                new_task_item = TodoItem(input_text=input_text)
+                new_task_item.save()
+                new_item_form = forms.NewItemForm()
 
-        task_list = TodoItem.objects.all()
+        if 'delete_item' in request.POST:
+            pk = request.POST.get('task_id')
+            self.delete_task(pk)
+
+        task_list = self.get_all_objects()
         template = self.template_name
         context = {
             'tab_switch_form': tab_switch_form,
@@ -41,4 +62,9 @@ class MyBaseTemplateView(View):
             'task_list': task_list,
         }
         return render(request, template, context)
+
+    def delete_task(self, pk):
+        task = self.get_object(pk)
+        task.delete()
+
 

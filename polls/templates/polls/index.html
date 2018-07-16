@@ -36,7 +36,7 @@
                 </div>
 
                 <dib class="btn-group">
-    +                <button id="add_button" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
+    +                <button id="add_button" name="add_item" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
                  </dib>
             </div>
         </form>
@@ -50,25 +50,31 @@
 {#    add form with method post, post for those that cause any change in db      #}
         <div class="content__group">
             <div class="content__tasks tasks">
-                    {% if task_list %}
-                        <ul id="task_list" class="tasks__list">
-                        {% for task in task_list %}
-                            <li id="{{ task.id }}" class="tasks__item mb-3">
-                                <div class="item__label input-group-prepend">
-                                    <button type="button" class="item__delete btn btn-danger">Delete</button>
+                {% if task_list %}
+                    <ul id="task_list" class="tasks__list">
+                    {% for task in task_list %}
+                        <li id="{{ task.id }}" class="tasks__item mb-3">
+                            <div class="item__label input-group-prepend">
 
-                                    <input type="checkbox" class="item__checkbox {% if task.checked %} checked {% endif %}" />
-                                </div>
+                                <form action="{% url 'delete_item' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="task_id" value="{{task.id}}" />
+                                    <button type="submit" name="delete_item" class="item__delete btn btn-danger">Delete</button>
+                                </form>
 
-                                <div class="content__text + {% if task.checked %} content__text_done {% endif %}">
-                                    <div class="item__textwrapper">{{ task.input_text }}</div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No items are available.</p>
-                    {% endif %}
+
+                                <input type="checkbox" class="item__checkbox {% if task.checked %} checked {% endif %}" />
+                            </div>
+
+                            <div class="content__text + {% if task.checked %} content__text_done {% endif %}">
+                                <div class="item__textwrapper">{{ task.input_text }}</div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No items are available.</p>
+                {% endif %}
             </div>
 
             <ul id="pagination_panel" class="content__pagination"></ul>
