@@ -91,27 +91,30 @@
                     <ul class="page__list">
                         {% if task_list.has_previous %}
                             <li class="page__link">
-                                <a href="?page={{ task_list.previous_page_number }}">prev</a>
-                            </li>
+                                <a href="?page={{ task_list.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="page__link disabled"><span>&laquo;</span></li>
                         {% endif %}
 
-                         {% for page in task_list.paginator.page_range %}
-                              {% if tasks.number == page %}
-                                  <li class="page__link active">
-                                      <a href="?page={{ page }}">{{ page }}</a>
-                                  </li>
-                              {% else %}
-                                  <li class="page__link">
-                                      <a href="?page={{ page }}">{{ page }}</a>
-                                  </li>
-                              {% endif %}
-                          {% endfor %}
+                        {% for page in task_list.paginator.page_range %}
+                            {% if tasks.number == page %}
+                                <li class="page__link active">
+                                    <a href="?page={{ page }}">{{ page }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page__link">
+                                    <a href="?page={{ page }}">{{ page }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
 
-                          {% if task_list.has_next %}
-                              <li class="page__link">
-                                  <a href="?page={{ task_list.next_page_number }}">next</a>
-                              </li>
-                          {% endif %}
+                        {% if task_list.has_next %}
+                            <li class="page__link">
+                                  <a href="?page={{ task_list.next_page_number }}">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
                     </ul>
                 {% endif %}
             </div>
@@ -282,24 +285,6 @@
             height: 40px;
         }
 
-        .pagination__link {
-            width: 20px;
-            height: 20px;
-            background-color: darkcyan;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .pagination__link:hover {
-            color: aliceblue;
-            background-color: darkblue;
-        }
-
-        .pagination__link_active {
-            background-color: darkblue;
-            color: white;
-        }
-
         body {
             display: flex;
             flex-direction: column;
@@ -317,7 +302,6 @@
             flex-direction: column;
             padding: 20px;
             width: 650px;
-            {#height: 800px;#}
             border: 2px solid darkcyan;
         }
 
@@ -390,6 +374,37 @@
         .item__textwrapper {
             width: 350px;
         }
+
+        .page__list {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page__link {
+            padding: 0 5px;
+        }
+
+        .page__link > a {
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: darkcyan;
+        }
+
+        .page__link.disabled {
+            color: darkgrey;
+        }
+
+        .page__link.active {
+            color: red;
+        }
+
+        .page__link:hover {
+            cursor: pointer;
+        }
+
 
     </style>
 
