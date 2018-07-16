@@ -1,11 +1,10 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="{% static 'polls/css/styles.css' %}" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
     <title>Todo with Python and Django</title>
 </head>
 <body>
@@ -15,13 +14,10 @@
         <form action="{% url 'actions_panel' %}" method="post">
             {% csrf_token %}
 
-            <div class="content__panel mb-3"  role="toolbar" aria-label="Toolbar with button groups">
-                <button id="delete_all_button" type="submit" name="delete_all" class="panel__button panel__button_deleteall btn btn-secondary btn-lg">Delete completed</button>
-
-                <div class="content__selectall">
-                    <button id="select_all" type="submit" name="select_all" class="btn btn-primary">Select all</button>
-                    <button id="deselect_all" type="submit" name="deselect_all" class="btn btn-danger">Deselect all</button>
-                </div>
+            <div class="content__panel mb-3 content__selectall" role="toolbar" aria-label="Toolbar with button groups">
+                <button id="delete_all_button" type="submit" name="delete_all" class="panel__button panel__button_deleteall btn btn-secondary">Delete completed</button>
+                <button id="select_all" type="submit" name="select_all" class="btn btn-primary">Select all</button>
+                <button id="deselect_all" type="submit" name="deselect_all" class="btn btn-danger">Deselect all</button>
             </div>
         </form>
 
@@ -29,20 +25,20 @@
             {% csrf_token %}
 
             <div class="new-items-wrapper">
-                <div class="form__group input-group input-group-lg">
+                <div class="form__group input-group">
                     {{ new_item_form }}
                 </div>
 
                 <div class="btn-group">
-                    <button id="add_button" name="add_item" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
+                    <button id="add_button" name="add_item" type="submit" class="form__button btn btn-primary" >Add</button>
                  </div>
             </div>
         </form>
 
         <div class="content__tabs tabs" role="tablist">
-            <a id="all" class="tabs__link active" data-toggle="list" href="#" role="tab">All</a>
-            <a id="completed" class="tabs__link" data-toggle="list" href="#" role="tab">Completed</a>
-            <a id="not-completed"  class="tabs__link" data-toggle="list" href="#" role="tab">Not completed</a>
+            <form action="{% url 'tabs' %}" class="">
+                {{ tab_switch_form }}
+            </form>
         </div>
 
         <div class="content__group">
@@ -58,7 +54,7 @@
                                 <form action="{% url 'delete_item' %}" method="post">
                                     {% csrf_token %}
                                     <input type="hidden" name="task_id" value="{{task.id}}" />
-                                    <button type="submit" name="delete_item" class="item__delete btn btn-danger">Delete</button>
+                                    <button type="submit" name="delete_item" class="item__delete btn btn-danger"><span class="far fa-times-circle"></span></button>
                                 </form>
 
                                 <form action="{% url 'change_item' %}" method="post">
@@ -66,8 +62,12 @@
                                     <input type="hidden" name="task_id" value="{{task.id}}" />
                                     <button type="submit"
                                             {% if task.checked %} name="make_item_undone" {% else %} name="make_item_done" {% endif %}
-                                            class="item__delete btn btn-danger">
-                                    {% if task.checked %} X {% else %} V {% endif %}
+                                            class="item__delete btn btn-secondary">
+                                    {% if task.checked %}
+                                        <span class="far fa-check-circle"></span>
+                                    {% else %}
+                                        <span class="far fa-square"></span>
+                                    {% endif %}
                                     </button>
                                 </form>
                             </div>
@@ -86,13 +86,7 @@
                 {% endif %}
             </div>
 
-            <form action="{% url 'tabs' %}" class="">
-                {{ tab_switch_form }}
-            </form>
-
             <ul id="pagination_panel" class="content__pagination"></ul>
-
-            <form action="{% url 'counters' %}" method="get">
 
                 <ul id="panel_counter" class="panel__counter list-group counter">
 {#                    {% for tab_form in tab_switch_forms %}#}
@@ -117,6 +111,257 @@
 
         </div>
     </div>
+
+    <style>
+        .form {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            vertical-align: middle;
+            width: 450px;
+        }
+
+        .form__group {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+        .tasks__item {
+            display: flex;
+            flex-direction: row;
+            font-size: 20px;
+            line-height: 30px;
+            width: 100%;
+            padding: 5px;
+        }
+
+        .content__text_done {
+            text-decoration: line-through;
+            font-style: italic;
+        }
+
+        .new-items-wrapper {
+            width: 100%;
+            display: flex;
+        }
+
+        .item__textwrapper {
+            padding: 0 5px;
+            vertical-align: middle;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 280px;
+        }
+
+        .tasks__list {
+            display: inline-block;
+            position: relative;
+            vertical-align: middle;
+            border: 2px solid darkcyan;
+            width: 450px;
+            {#height: 266px;#}
+            padding: 20px;
+            margin: 0;
+            text-align: center;
+            list-style: none;
+        }
+
+        .tabs {
+            display: flex;
+            flex-direction: row;
+            text-align: center;
+            {#padding-top: 30px;#}
+        }
+
+        .tabs__link {
+            font-size: 20px;
+            color: darkcyan;
+            text-decoration: none;
+        }
+
+        .tabs__link:hover {
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid darkblue;
+            color: darkblue;
+        }
+
+        .tabs__link:active {
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .active {
+            text-decoration: none;
+            border: 1px solid darkblue;
+            color: darkblue;
+        }
+
+        .content__panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 10px;
+            width: 450px;
+        }
+
+        .panel__counter {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0px;
+            list-style-type: none;
+
+        }
+
+        .panel__counter > li {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .counter__label {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .counter__label:after {
+            content: " ...................................................................................";
+        }
+
+        .content__title {
+            font-size: 20px;
+            /* padding: 40px 0; */
+        }
+
+        .content__pagination {
+            display: flex;
+            flex-direction: row;
+            padding-left: 0;
+            margin: 0;
+            list-style-type: none;
+            height: 40px;
+        }
+
+        .pagination__link {
+            width: 20px;
+            height: 20px;
+            background-color: darkcyan;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .pagination__link:hover {
+            color: aliceblue;
+            background-color: darkblue;
+        }
+
+        .pagination__link_active {
+            background-color: darkblue;
+            color: white;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+
+        }
+
+        .content {
+            background-color: aliceblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            width: 650px;
+            {#height: 800px;#}
+            border: 2px solid darkcyan;
+        }
+
+        .content__selectall {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-self: center;
+            vertical-align: middle;
+            padding-top: 20px;
+        }
+
+        .tabs {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tabs > li {
+            padding: 5px 10px 5px 10px;
+        }
+
+        .tabs > li > label {
+            cursor: pointer;
+        }
+
+        .tabs > li > label > input {
+            display: none;
+        }
+
+        .new-items-wrapper > .form__group > label {
+            display: none;
+        }
+
+        .content__tabs.tabs > form > label {
+            display: none;
+        }
+
+        .new-items-wrapper > div > .errorlist {
+            display: none;
+        }
+
+        .content__tabs.tabs > form > .errorlist {
+            display: none;
+        }
+
+        .item__label .btn {
+            padding: 0;
+        }
+
+        .item__delete {
+            width: 21px;
+            height: 21px;
+        }
+
+        .item__delete > span {
+            font-size: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .item__label.input-group-prepend {
+            display: inherit;
+        }
+
+        .item__label.input-group-prepend > form {
+            padding: 0 5px 0 0;
+        }
+
+        .item__textwrapper {
+            width: 350px;
+        }
+
+    </style>
+
 </body>
 
 {% block javascript %}

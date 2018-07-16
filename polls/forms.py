@@ -26,6 +26,8 @@ class TabSwitchForm(forms.Form):
         widget=forms.RadioSelect(
             attrs={
                 'onclick': 'this.form.submit();',
+                'class': 'tabs',
+                'role': 'tab',
             }
         ),
         choices=TABS_SWITCHERS,
