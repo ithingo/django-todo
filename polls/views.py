@@ -19,9 +19,9 @@ class MyBaseTemplateView(View):
         """Gets all task items"""
         return TodoItem.objects.all().order_by('id')
 
-    def __get_checked_objects(self):
+    def __get_objects_by_checked(self, checked):
         """Gets all task items"""
-        return TodoItem.objects.filter(checked=True)
+        return TodoItem.objects.filter(checked=checked)
 
     def __get_object(self, pk):
         """Gets single task by primary key (id)"""
@@ -52,7 +52,7 @@ class MyBaseTemplateView(View):
 
     def __delete_all(self):
         """Deletes all tasks"""
-        tasks = self.__get_checked_objects()
+        tasks = self.__get_objects_by_checked(checked=True)
         tasks.delete()
 
     def __get_paginated_list(self, request, task_list):
@@ -75,6 +75,16 @@ class MyBaseTemplateView(View):
         input_text = re.sub(r'</?[a-zA-Z]*>', '', input_text)
         return input_text
 
+    def __get_counters(self):
+        all_count = self.__get_all_objects().count()
+        checked_count = self.__get_objects_by_checked(checked=True).count()
+        unchecked_count = self.__get_objects_by_checked(checked=False).count()
+        return {
+            'all': all_count,
+            'checked': checked_count,
+            'unchecked': unchecked_count,
+        }
+
     # HTML forms support only GET and POST methods
 
     def get(self, request):
@@ -96,12 +106,14 @@ class MyBaseTemplateView(View):
                 task_list = task_list.filter(checked=False)
 
         task_list_paginated = self.__get_paginated_list(request, task_list)
-
         template = self.template_name
+        counters = self.__get_counters()
+
         context = {
             'tab_switch_form': tab_switch_form,
             'new_item_form': new_item_form,
             'task_list': task_list_paginated,
+            'counters': counters,
         }
         return render(request, template, context)
 
@@ -148,12 +160,14 @@ class MyBaseTemplateView(View):
         task_list = self.__get_all_objects()
 
         task_list_paginated = self.__get_paginated_list(request, task_list)
-
         template = self.template_name
+        counters = self.__get_counters()
+
         context = {
             'tab_switch_form': tab_switch_form,
             'new_item_form': new_item_form,
             'task_list': task_list_paginated,
+            'counters': counters,
         }
         return render(request, template, context)
 

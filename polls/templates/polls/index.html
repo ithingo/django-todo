@@ -118,33 +118,25 @@
                     </ul>
                 {% endif %}
             </div>
+
+            <ul class="panel__counter list-group counter">
+                <li>
+                    <p class="counter__label">All:</p>
+                    <p class="counter__value">{{ counters.all }}</p>
+                </li>
+
+                <li>
+                    <p class="counter__label">Checked:</p>
+                    <p class="counter__value">{{ counters.checked }}</p>
+                </li>
+
+                <li>
+                    <p class="counter__label">Unchecked:</p>
+                    <p class="counter__value">{{ counters.unchecked }}</p>
+                </li>
+            </ul>
         </div>
     </div>
-
-
-
-
-
-                    {#                <ul id="panel_counter" class="panel__counter list-group counter">#}
-{#                    {% for tab_form in tab_switch_forms %}#}
-{#                        <li>#}
-{#                            <div id="counter_label_all" class=" counter__label">All:</div>#}
-{#                            <div class="counter__value">0</div>#}
-{#                            <div id="{{ tab_form.id }}"></div>#}
-{#                            <div class="counter_label">{{ tab_form.count }}</div>#}
-{#                        </li>#}
-
-{#                    {% endfor %}#}
-{#                        <li>#}
-{#                            <div id="counter_label_checked" class=" counter__label">Checked:</div>#}
-{#                            <div class="counter__value">0</div>#}
-{#                        </li>#}
-{#                        <li>#}
-{#                            <div id="counter_label_unchecked" class=" counter__label">Unchecked:</div>#}
-{#                            <div class="counter__value">0</div>#}
-{#                        </li>#}
-{#                </ul>#}
-
 
     <style>
         .form {
