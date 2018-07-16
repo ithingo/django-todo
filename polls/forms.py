@@ -16,11 +16,6 @@ class NewItemForm(forms.Form):
         ),
     )
 
-# class ActionPanelForm(forms.Form):
-
-
-# class TaskListForm(forms.Form):
-
 
 TABS_SWITCHERS = (
     ('all', 'All'),

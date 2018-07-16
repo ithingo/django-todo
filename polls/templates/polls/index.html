@@ -16,11 +16,11 @@
             {% csrf_token %}
 
             <div class="content__panel mb-3"  role="toolbar" aria-label="Toolbar with button groups">
-                <button id="delete_all_button" class="panel__button panel__button_deleteall btn btn-secondary btn-lg">Delete completed</button>
+                <button id="delete_all_button" type="submit" name="delete_all" class="panel__button panel__button_deleteall btn btn-secondary btn-lg">Delete completed</button>
 
                 <div class="content__selectall">
-                    <button id="select_all" type="submit" class="CURRENTLY_VISIBLE">Select all</button>
-                    <button id="deselect_all" type="submit" class="CURRENTLY_HIDDEN">Deselect all</button>
+                    <button id="select_all" type="submit" name="select_all" class="btn btn-primary">Select all</button>
+                    <button id="deselect_all" type="submit" name="deselect_all" class="btn btn-danger">Deselect all</button>
                 </div>
             </div>
         </form>
@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="btn-group">
-    +                <button id="add_button" name="add_item" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
+                    <button id="add_button" name="add_item" type="submit" class="form__button btn btn-primary btn-lg" >Add</button>
                  </div>
             </div>
         </form>

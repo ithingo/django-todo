@@ -17,6 +17,13 @@ class MyBaseTemplateView(View):
         except TodoItem.DoesNotExist:
             return None                   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+    def __get_checked_objects(self):
+        """Gets all task items"""
+        try:
+            return TodoItem.objects.get(checked=True)
+        except TodoItem.DoesNotExist:
+            return None
+
     def __get_object(self, pk):
         """Gets single task by primary key (id)"""
         try:
@@ -40,6 +47,16 @@ class MyBaseTemplateView(View):
         task = self.__get_object(pk)
         task.checked = checked
         task.save()
+
+    def __change_all_status(self, checked):
+        tasks = self.__get_all_objects()
+        for task in tasks:
+            task.checked = checked
+            task.save()
+
+    def __delete_all(self):
+        tasks = self.__get_checked_objects()
+        tasks.delete()
 
     # HTML forms support only GET and POST methods
 
@@ -81,6 +98,17 @@ class MyBaseTemplateView(View):
             pk = request.POST.get('task_id')
             checked = False
             self.__change_task_status(pk, checked)
+
+        if 'select_all' in request.POST:
+            checked = True
+            self.__change_all_status(checked)
+
+        if 'deselect_all' in request.POST:
+            checked = False
+            self.__change_all_status(checked)
+
+        if 'delete_all' in request.POST:
+            self.__delete_all()
 
         task_list = self.__get_all_objects()
         template = self.template_name
