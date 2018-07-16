@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View
+from django.core.paginator import Paginator, EmptyPage, InvalidPage, PageNotAnInteger
 
 from .models import TodoItem
 from . import forms
@@ -12,7 +13,7 @@ class MyBaseTemplateView(View):
 
     def __get_all_objects(self):
         """Gets all task items"""
-        return TodoItem.objects.all()
+        return TodoItem.objects.all().order_by('id')
 
     def __get_checked_objects(self):
         """Gets all task items"""
@@ -50,6 +51,22 @@ class MyBaseTemplateView(View):
         tasks = self.__get_checked_objects()
         tasks.delete()
 
+    def __get_paginated_list(self, request, task_list):
+        items_on_page = 5
+        paginator = Paginator(task_list, items_on_page)
+
+        try:
+            page = int(request.GET.get('page', 1))
+        except PageNotAnInteger:
+            page = 1
+
+        try:
+            task_list_paginated = paginator.page(page)
+        except(EmptyPage, InvalidPage):
+            task_list_paginated = paginator.page(paginator.num_pages)
+
+        return task_list_paginated
+
     # HTML forms support only GET and POST methods
 
     def get(self, request):
@@ -70,11 +87,13 @@ class MyBaseTemplateView(View):
             if selection == 'unchecked':
                 task_list = task_list.filter(checked=False)
 
+        task_list_paginated = self.__get_paginated_list(request, task_list)
+
         template = self.template_name
         context = {
             'tab_switch_form': tab_switch_form,
             'new_item_form': new_item_form,
-            'task_list': task_list,
+            'task_list': task_list_paginated,
         }
         return render(request, template, context)
 
@@ -118,11 +137,14 @@ class MyBaseTemplateView(View):
             self.__delete_all()
 
         task_list = self.__get_all_objects()
+
+        task_list_paginated = self.__get_paginated_list(request, task_list)
+
         template = self.template_name
         context = {
             'tab_switch_form': tab_switch_form,
             'new_item_form': new_item_form,
-            'task_list': task_list,
+            'task_list': task_list_paginated,
         }
         return render(request, template, context)
 

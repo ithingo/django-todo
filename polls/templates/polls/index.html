@@ -86,9 +86,43 @@
                 {% endif %}
             </div>
 
-            <ul id="pagination_panel" class="content__pagination"></ul>
+            <div id="pagination_panel" class="content__pagination">
+                {% if task_list %}
+                    <ul class="page__list">
+                        {% if task_list.has_previous %}
+                            <li class="page__link">
+                                <a href="?page={{ task_list.previous_page_number }}">prev</a>
+                            </li>
+                        {% endif %}
 
-                <ul id="panel_counter" class="panel__counter list-group counter">
+                         {% for page in task_list.paginator.page_range %}
+                              {% if tasks.number == page %}
+                                  <li class="page__link active">
+                                      <a href="?page={{ page }}">{{ page }}</a>
+                                  </li>
+                              {% else %}
+                                  <li class="page__link">
+                                      <a href="?page={{ page }}">{{ page }}</a>
+                                  </li>
+                              {% endif %}
+                          {% endfor %}
+
+                          {% if task_list.has_next %}
+                              <li class="page__link">
+                                  <a href="?page={{ task_list.next_page_number }}">next</a>
+                              </li>
+                          {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+                    {#                <ul id="panel_counter" class="panel__counter list-group counter">#}
 {#                    {% for tab_form in tab_switch_forms %}#}
 {#                        <li>#}
 {#                            <div id="counter_label_all" class=" counter__label">All:</div>#}
@@ -106,11 +140,8 @@
 {#                            <div id="counter_label_unchecked" class=" counter__label">Unchecked:</div>#}
 {#                            <div class="counter__value">0</div>#}
 {#                        </li>#}
-                </ul>
-            </form>
+{#                </ul>#}
 
-        </div>
-    </div>
 
     <style>
         .form {
