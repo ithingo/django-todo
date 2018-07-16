@@ -10,19 +10,23 @@ class NewItemForm(forms.Form):
                 'class': 'form-control',
                 'aria-label': 'Type to add',
                 'aria-describedby': 'inputGroup-sizing-default',
-                'required': 'true',
                 'name': 'input_text',
             },
         ),
     )
 
 
-TABS_SWITCHERS = (
-    ('all', 'All'),
-    ('checked', 'Checked'),
-    ('unchecked', 'Unchecked'),
-)
-
-
 class TabSwitchForm(forms.Form):
-    tabs = forms.ChoiceField(choices=TABS_SWITCHERS,)
+    TABS_SWITCHERS = (
+        ('all', 'All'),
+        ('checked', 'Checked'),
+        ('unchecked', 'Unchecked'),
+    )
+    tabs = forms.ChoiceField(
+        widget=forms.RadioSelect(
+            attrs={
+                'onclick': 'this.form.submit();',
+            }
+        ),
+        choices=TABS_SWITCHERS,
+    )

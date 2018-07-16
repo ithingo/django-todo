@@ -66,6 +66,16 @@ class MyBaseTemplateView(View):
         new_item_form = forms.NewItemForm()
 
         task_list = self.__get_all_objects()
+
+        if 'tabs' in request.GET:
+            selection = request.GET.get('tabs')
+            if selection == 'all':
+                task_list = self.__get_all_objects()
+            if selection == 'checked':
+                task_list = task_list.filter(checked=True)
+            if selection == 'unchecked':
+                task_list = task_list.filter(checked=False)
+
         template = self.template_name
         context = {
             'tab_switch_form': tab_switch_form,

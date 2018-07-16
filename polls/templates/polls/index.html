@@ -86,20 +86,24 @@
                 {% endif %}
             </div>
 
+            <form action="{% url 'tabs' %}" class="">
+                {{ tab_switch_form }}
+            </form>
+
             <ul id="pagination_panel" class="content__pagination"></ul>
 
-            <form action="" method="get">
-                {% csrf_token %}
+            <form action="{% url 'counters' %}" method="get">
+
                 <ul id="panel_counter" class="panel__counter list-group counter">
-                    {% for tab_form in tab_switch_forms %}
-                        <li>
+{#                    {% for tab_form in tab_switch_forms %}#}
+{#                        <li>#}
 {#                            <div id="counter_label_all" class=" counter__label">All:</div>#}
 {#                            <div class="counter__value">0</div>#}
-                            <div id="{{ tab_form.id }}"></div>
-                            <div class="counter_label">{{ tab_form.count }}</div>
-                        </li>
+{#                            <div id="{{ tab_form.id }}"></div>#}
+{#                            <div class="counter_label">{{ tab_form.count }}</div>#}
+{#                        </li>#}
 
-                    {% endfor %}
+{#                    {% endfor %}#}
 {#                        <li>#}
 {#                            <div id="counter_label_checked" class=" counter__label">Checked:</div>#}
 {#                            <div class="counter__value">0</div>#}
