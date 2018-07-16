@@ -2,8 +2,12 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.core.paginator import Paginator, EmptyPage, InvalidPage, PageNotAnInteger
 
+
 from .models import TodoItem
 from . import forms
+
+
+import re
 
 
 class MyBaseTemplateView(View):
@@ -67,6 +71,10 @@ class MyBaseTemplateView(View):
 
         return task_list_paginated
 
+    def __clear_input(self, input_text):
+        input_text = re.sub(r'</?[a-zA-Z]*>', '', input_text)
+        return input_text
+
     # HTML forms support only GET and POST methods
 
     def get(self, request):
@@ -108,6 +116,7 @@ class MyBaseTemplateView(View):
         if 'add_item' in request.POST:
             if new_item_form.is_valid():
                 input_text = new_item_form.cleaned_data['input_text']
+                input_text = self.__clear_input(input_text)
                 self.__save_task(input_text)
                 new_item_form = forms.NewItemForm()
 
