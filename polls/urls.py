@@ -10,4 +10,7 @@ urlpatterns = [
     path('', views.MyBaseTemplateView.as_view(), name='actions_panel'),
     path('', views.MyBaseTemplateView.as_view(), name='tabs'),
     path('', views.MyBaseTemplateView.as_view(), name='counters'),
+
+    # on double click updating, try
+    path('', views.MyBaseTemplateView.as_view(), name='update_item')
 ]

@@ -96,6 +96,7 @@ class MyBaseTemplateView(View):
         (tab switching doesn't modify db, so it uses GET request)"""
         tab_switch_form = forms.TabSwitchForm()
         new_item_form = forms.NewItemForm()
+        ghost_input_form = forms.GhostInputForm()
 
         task_list = self.__get_all_objects()
 
@@ -117,6 +118,7 @@ class MyBaseTemplateView(View):
             'new_item_form': new_item_form,
             'task_list': task_list_paginated,
             'counters': counters,
+            'ghost_input_form': ghost_input_form,
         }
         return render(request, template, context)
 
@@ -127,6 +129,7 @@ class MyBaseTemplateView(View):
         and re-render page"""
         tab_switch_form = forms.TabSwitchForm(request.POST)
         new_item_form = forms.NewItemForm(request.POST)
+        ghost_input_form = forms.GhostInputForm()
 
         if 'add_item' in request.POST:
             if new_item_form.is_valid():
@@ -160,6 +163,17 @@ class MyBaseTemplateView(View):
         if 'delete_all' in request.POST:
             self.__delete_all()
 
+        if 'update_item' in request.POST:
+            new_value = request.POST.get('input_text')
+            new_value = self.__clear_input(new_value)
+
+            # GET HERE A PK, THEN FIND BY PK AND UPDATE!!!@!@
+
+            print('=====================')
+            # print(pk)
+            print(new_value)
+            print('========================')
+
         task_list = self.__get_all_objects()
 
         task_list_paginated = self.__get_paginated_list(request, task_list)
@@ -171,5 +185,6 @@ class MyBaseTemplateView(View):
             'new_item_form': new_item_form,
             'task_list': task_list_paginated,
             'counters': counters,
+            'ghost_input_form': ghost_input_form,
         }
         return render(request, template, context)

@@ -32,3 +32,14 @@ class TabSwitchForm(forms.Form):
         ),
         choices=TABS_SWITCHERS,
     )
+
+
+class GhostInputForm(forms.Form):
+    input_text = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'clcik Add to update item',
+                'class': 'item__ghost',
+            }
+        )
+    )
