@@ -413,14 +413,20 @@
             const chosenItemTag = e.target.parentElement;
             const oldValue = e.target.innerText;
 
+            const taskid = chosenItemTag.parentElement.id;
+
             const ghostFormTemplate =
                 `<form action="{% url 'update_item' %}" class="ghost-form" method="post">
                     {% csrf_token %}
                     {{ ghost_input_form }}
+                    <input type="hidden" name="task_id" value="${taskid}" />
                     <button type="submit" name="update_item">Update</button>
                 </form>`;
 
             $(chosenItemTag).html(ghostFormTemplate);
+
+            const ghost_input = $('input.item__ghost');
+            ghost_input.val(oldValue);
         }
 
         $(document).on("dblclick", ".item__textwrapper", function(e) {

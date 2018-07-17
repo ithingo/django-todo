@@ -27,7 +27,7 @@ class MyBaseTemplateView(View):
         """Gets single task by primary key (id)"""
         return TodoItem.objects.get(pk=pk)
 
-    def __save_task(self, input_text):
+    def __add_new_task(self, input_text):
         """Creates new task item from input text"""
         new_task_item = TodoItem(input_text=input_text)
         new_task_item.save()
@@ -88,6 +88,11 @@ class MyBaseTemplateView(View):
             'unchecked': unchecked_count,
         }
 
+    def __update_with_value(self, new_value, pk):
+        task = self.__get_object(pk)
+        task.input_text = new_value;
+        task.save()
+
     # HTML forms support only GET and POST methods
 
     def get(self, request):
@@ -135,7 +140,7 @@ class MyBaseTemplateView(View):
             if new_item_form.is_valid():
                 input_text = new_item_form.cleaned_data['input_text']
                 input_text = self.__clear_input(input_text)
-                self.__save_task(input_text)
+                self.__add_new_task(input_text)
                 new_item_form = forms.NewItemForm()
 
         if 'delete_item' in request.POST:
@@ -166,13 +171,8 @@ class MyBaseTemplateView(View):
         if 'update_item' in request.POST:
             new_value = request.POST.get('input_text')
             new_value = self.__clear_input(new_value)
-
-            # GET HERE A PK, THEN FIND BY PK AND UPDATE!!!@!@
-
-            print('=====================')
-            # print(pk)
-            print(new_value)
-            print('========================')
+            pk = request.POST.get('task_id')
+            self.__update_with_value(new_value, pk)
 
         task_list = self.__get_all_objects()
 
