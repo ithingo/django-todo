@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import View
 from django.core.paginator import Paginator, EmptyPage, InvalidPage, PageNotAnInteger
@@ -140,16 +141,13 @@ class MyBaseTemplateView(View):
         handles POST requests from all forms on a page (all targets to the root url)
         does whatever it needs
         and re-render page"""
-        tab_switch_form = forms.TabSwitchForm(request.POST)
         new_item_form = forms.NewItemForm(request.POST)
-        ghost_input_form = forms.GhostInputForm()
 
         if 'add_item' in request.POST:
             if new_item_form.is_valid():
                 input_text = new_item_form.cleaned_data['input_text']
                 input_text = self.__clear_input(input_text)
                 self.__add_new_task(input_text)
-                new_item_form = forms.NewItemForm()
 
         if 'delete_item' in request.POST:
             pk = request.POST.get('task_id')
@@ -182,17 +180,4 @@ class MyBaseTemplateView(View):
             pk = request.POST.get('task_id')
             self.__update_with_value(new_value, pk)
 
-        task_list = self.__get_all_objects()
-
-        task_list_paginated = self.__get_paginated_list(request, task_list)
-        template = self.template_name
-        counters = self.__get_counters()
-
-        context = {
-            'tab_switch_form': tab_switch_form,
-            'new_item_form': new_item_form,
-            'task_list': task_list_paginated,
-            'counters': counters,
-            'ghost_input_form': ghost_input_form,
-        }
-        return render(request, template, context)
+        return HttpResponseRedirect("/")

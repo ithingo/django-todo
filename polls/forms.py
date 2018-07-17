@@ -6,7 +6,7 @@ class NewItemForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'placeholder': 'Click Add or press Enter',
+                'placeholder': 'Click Add',
                 'class': 'form-control',
                 'aria-label': 'Type to add',
                 'aria-describedby': 'inputGroup-sizing-default',
