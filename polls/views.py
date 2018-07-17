@@ -14,8 +14,6 @@ import re
 
 class MyBaseTemplateView(View):
     template_name = 'polls/index.html'
-    new_item_form_class = forms.NewItemForm
-    tab_switch_form = forms.TabSwitchForm
 
     def __get_all_objects(self):
         """Gets all task items"""
@@ -108,20 +106,27 @@ class MyBaseTemplateView(View):
         """For method GET
         renders page at first step, if tabs clicked - do tab switching
         (tab switching doesn't modify db, so it uses GET request)"""
-        tab_switch_form = forms.TabSwitchForm()
         new_item_form = forms.NewItemForm()
         ghost_input_form = forms.GhostInputForm()
 
         task_list = self.__get_all_objects()
+        active_tab = 'all'
+
+        tab_switch_form = forms.TabSwitchForm()
 
         if 'tabs' in request.GET:
             selection = request.GET.get('tabs')
             if selection == 'all':
+                active_tab = 'all'
                 task_list = self.__get_all_objects()
             if selection == 'checked':
+                active_tab = 'checked'
                 task_list = task_list.filter(checked=True)
             if selection == 'unchecked':
+                active_tab = 'unchecked'
                 task_list = task_list.filter(checked=False)
+
+        tab_switch_form.fields['tabs'].initial = active_tab
 
         task_list_paginated = self.__get_paginated_list(request, task_list)
         template = self.template_name

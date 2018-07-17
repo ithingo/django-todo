@@ -402,6 +402,7 @@
         }
 
 
+
     </style>
 </body>
 
@@ -432,6 +433,8 @@
         $(document).on("dblclick", ".item__textwrapper", function(e) {
            doubleClickEventHandler(e);
         });
+
+        $(".content__tabs  input:checked").parents("label").css("color", "red");
     });
 </script>
 
