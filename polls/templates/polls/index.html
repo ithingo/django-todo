@@ -396,6 +396,12 @@
         .page__link:hover {
             cursor: pointer;
         }
+
+        .ghost-form > label {
+            display: none;
+        }
+
+
     </style>
 </body>
 
@@ -408,7 +414,7 @@
             const oldValue = e.target.innerText;
 
             const ghostFormTemplate =
-                `<form action="{% url 'update_item' %}" class="" method="post">
+                `<form action="{% url 'update_item' %}" class="ghost-form" method="post">
                     {% csrf_token %}
                     {{ ghost_input_form }}
                     <button type="submit" name="update_item">Update</button>
