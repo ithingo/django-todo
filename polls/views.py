@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.core.paginator import Paginator, EmptyPage, InvalidPage, PageNotAnInteger
+from django.shortcuts import get_object_or_404
 
 
 from .models import TodoItem
@@ -25,7 +26,14 @@ class MyBaseTemplateView(View):
 
     def __get_object(self, pk):
         """Gets single task by primary key (id)"""
-        return TodoItem.objects.get(pk=pk)
+        task = get_object_or_404(TodoItem, pk=pk)
+        return task
+        # return TodoItem.objects.get(pk=pk)
+
+        # try:
+        #     comment = Comment.objects.get(pk=comment_id)
+        # except Comment.DoesNotExist:
+        #     comment = None
 
     def __add_new_task(self, input_text):
         """Creates new task item from input text"""
@@ -90,7 +98,7 @@ class MyBaseTemplateView(View):
 
     def __update_with_value(self, new_value, pk):
         task = self.__get_object(pk)
-        task.input_text = new_value;
+        task.input_text = new_value
         task.save()
 
     # HTML forms support only GET and POST methods
