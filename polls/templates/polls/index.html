@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+    <title>Todo with Python and Django</title>
+</head>
+<body>
+    <div class="content">
+        <div class="content__title">Todo with Django</div>
+
+        <form action="{% url 'actions_panel' %}" method="post">
+            {% csrf_token %}
+
+            <div class="content__panel mb-3 content__selectall" role="toolbar" aria-label="Toolbar with button groups">
+                <button id="delete_all_button" type="submit" name="delete_all" class="panel__button panel__button_deleteall btn btn-secondary">Delete completed</button>
+                <button id="select_all" type="submit" name="select_all" class="btn btn-primary">Select all</button>
+                <button id="deselect_all" type="submit" name="deselect_all" class="btn btn-danger">Deselect all</button>
+            </div>
+        </form>
+
+        <form action="{% url 'add_item' %}" method="post" class="content__form form">
+            {% csrf_token %}
+
+            <div class="new-items-wrapper">
+                <div class="form__group input-group">
+                    {{ new_item_form }}
+                </div>
+
+                <div class="btn-group">
+                    <button id="add_button" name="add_item" type="submit" class="form__button btn btn-primary" >Add</button>
+                 </div>
+            </div>
+        </form>
+
+        <div class="content__tabs tabs" role="tablist">
+            <form action="{% url 'tabs' %}" class="">
+                {{ tab_switch_form }}
+            </form>
+        </div>
+
+        <div class="content__group">
+            <div class="content__tasks tasks">
+                {% if task_list %}
+
+                    <ul id="task_list" class="tasks__list">
+
+                    {% for task in task_list %}
+
+                        <li id="{{ task.id }}" class="tasks__item mb-3">
+                            <div class="item__label input-group-prepend">
+                                <form action="{% url 'delete_item' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="task_id" value="{{task.id}}" />
+                                    <button type="submit" name="delete_item" class="item__delete btn btn-danger"><span class="far fa-times-circle"></span></button>
+                                </form>
+
+                                <form action="{% url 'change_item' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="task_id" value="{{task.id}}" />
+                                    <button type="submit"
+                                            {% if task.checked %} name="make_item_undone" {% else %} name="make_item_done" {% endif %}
+                                            class="item__delete btn btn-secondary">
+                                    {% if task.checked %}
+                                        <span class="far fa-check-circle"></span>
+                                    {% else %}
+                                        <span class="far fa-square"></span>
+                                    {% endif %}
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="content__text {% if task.checked %} content__text_done {% endif %}">
+                                <div class="item__textwrapper">{{ task.input_text }}</div>
+                            </div>
+                        </li>
+
+                    {% endfor %}
+
+                    </ul>
+
+                {% else %}
+                    <p>No items are available.</p>
+                {% endif %}
+            </div>
+
+            <div id="pagination_panel" class="content__pagination">
+                {% if task_list %}
+                    <ul class="page__list">
+                        {% if task_list.has_previous %}
+                            <li class="page__link">
+                                <a href="?page={{ task_list.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="page__link disabled"><span>&laquo;</span></li>
+                        {% endif %}
+
+                        {% for page in task_list.paginator.page_range %}
+                            {% if tasks.number == page %}
+                                <li class="page__link active">
+                                    <a href="?page={{ page }}">{{ page }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page__link">
+                                    <a href="?page={{ page }}">{{ page }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if task_list.has_next %}
+                            <li class="page__link">
+                                  <a href="?page={{ task_list.next_page_number }}">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <ul class="panel__counter list-group counter">
+                <li>
+                    <p class="counter__label">All:</p>
+                    <p class="counter__value">{{ counters.all }}</p>
+                </li>
+
+                <li>
+                    <p class="counter__label">Checked:</p>
+                    <p class="counter__value">{{ counters.checked }}</p>
+                </li>
+
+                <li>
+                    <p class="counter__label">Unchecked:</p>
+                    <p class="counter__value">{{ counters.unchecked }}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <style>
+        .form {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            vertical-align: middle;
+            width: 450px;
+        }
+
+        .form__group {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+        .tasks__item {
+            display: flex;
+            flex-direction: row;
+            font-size: 20px;
+            line-height: 30px;
+            width: 100%;
+            padding: 5px;
+        }
+
+        .content__text_done {
+            text-decoration: line-through;
+            font-style: italic;
+        }
+
+        .new-items-wrapper {
+            width: 100%;
+            display: flex;
+        }
+
+        .item__textwrapper {
+            padding: 0 5px;
+            vertical-align: middle;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 280px;
+        }
+
+        .tasks__list {
+            display: inline-block;
+            position: relative;
+            vertical-align: middle;
+            border: 2px solid darkcyan;
+            width: 450px;
+            {#height: 266px;#}
+            padding: 20px;
+            margin: 0;
+            text-align: center;
+            list-style: none;
+        }
+
+        .tabs {
+            display: flex;
+            flex-direction: row;
+            text-align: center;
+            {#padding-top: 30px;#}
+        }
+
+        .tabs__link {
+            font-size: 20px;
+            color: darkcyan;
+            text-decoration: none;
+        }
+
+        .tabs__link:hover {
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid darkblue;
+            color: darkblue;
+        }
+
+        .tabs__link:active {
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .active {
+            text-decoration: none;
+            border: 1px solid darkblue;
+            color: darkblue;
+        }
+
+        .content__panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 10px;
+            width: 450px;
+        }
+
+        .panel__counter {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0px;
+            list-style-type: none;
+
+        }
+
+        .panel__counter > li {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .counter__label {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .counter__label:after {
+            content: " ...................................................................................";
+        }
+
+        .content__title {
+            font-size: 20px;
+            /* padding: 40px 0; */
+        }
+
+        .content__pagination {
+            display: flex;
+            flex-direction: row;
+            padding-left: 0;
+            margin: 0;
+            list-style-type: none;
+            height: 40px;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+
+        }
+
+        .content {
+            background-color: aliceblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            width: 650px;
+            border: 2px solid darkcyan;
+        }
+
+        .content__selectall {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-self: center;
+            vertical-align: middle;
+            padding-top: 20px;
+        }
+
+        .tabs {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tabs > li {
+            padding: 5px 10px 5px 10px;
+        }
+
+        .tabs > li > label {
+            cursor: pointer;
+        }
+
+        .tabs > li > label > input {
+            display: none;
+        }
+
+        .new-items-wrapper > .form__group > label {
+            display: none;
+        }
+
+        .content__tabs.tabs > form > label {
+            display: none;
+        }
+
+        .new-items-wrapper > div > .errorlist {
+            display: none;
+        }
+
+        .content__tabs.tabs > form > .errorlist {
+            display: none;
+        }
+
+        .item__label .btn {
+            padding: 0;
+        }
+
+        .item__delete {
+            width: 21px;
+            height: 21px;
+        }
+
+        .item__delete > span {
+            font-size: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .item__label.input-group-prepend {
+            display: inherit;
+        }
+
+        .item__label.input-group-prepend > form {
+            padding: 0 5px 0 0;
+        }
+
+        .item__textwrapper {
+            width: 350px;
+        }
+
+        .page__list {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page__link {
+            padding: 0 5px;
+        }
+
+        .page__link > a {
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: darkcyan;
+        }
+
+        .page__link.disabled {
+            color: darkgrey;
+        }
+
+        .page__link.active {
+            color: red;
+        }
+
+        .page__link:hover {
+            cursor: pointer;
+        }
+
+        .ghost-form > label {
+            display: none;
+        }
+
+
+
+    </style>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+    $(function() {
+        function doubleClickEventHandler(e) {
+            const chosenItemTag = e.target.parentElement;
+            const oldValue = e.target.innerText;
+
+            const taskid = chosenItemTag.parentElement.id;
+
+            const ghostFormTemplate =
+                `<form action="{% url 'update_item' %}" class="ghost-form" method="post">
+                    {% csrf_token %}
+                    {{ ghost_input_form }}
+                    <input type="hidden" name="task_id" value="${taskid}" />
+                    <button type="submit" name="update_item">Update</button>
+                </form>`;
+
+            $(chosenItemTag).html(ghostFormTemplate);
+
+            const ghost_input = $('input.item__ghost');
+            ghost_input.val(oldValue);
+        }
+
+        $(document).on("dblclick", ".item__textwrapper", function(e) {
+           doubleClickEventHandler(e);
+        });
+
+        $(".content__tabs  input:checked").parents("label").css("color", "red");
+    });
+</script>
+
+</html>
